@@ -1,5 +1,6 @@
 package com.financial.Financial.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,13 +20,21 @@ public class Cliente {
 
     private String nome;
     private String cognome;
+
+    @Column(unique = true)
     private String codiceFiscale;
 
     @OneToOne
     @JoinColumn(name = "utente_id")
+    @JsonBackReference
     private Utente utente;
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Acquisto> acquisti;
+
+    public void addAcquisto(Acquisto acquisto) {
+        acquisti.add(acquisto);
+        acquisto.setCliente(this);
+    }
 
 
 }

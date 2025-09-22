@@ -1,10 +1,15 @@
 package com.financial.Financial.service;
 
+import com.financial.Financial.model.Acquisto;
+import com.financial.Financial.model.Cliente;
 import com.financial.Financial.model.Prodotto;
+import com.financial.Financial.model.Utente;
+import com.financial.Financial.model.dto.PreventivoDto;
 import com.financial.Financial.repository.ProdottoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,4 +50,5 @@ public class ProdottoServiceImpl implements ProdottoService {
         }
         prodottoRepository.deleteById(id);
     }
+
 }

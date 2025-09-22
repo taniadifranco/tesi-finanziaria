@@ -12,5 +12,6 @@ public interface UtenteService {
     Utente update(Utente utente);
     void deleteById(Long id);
     Optional<Utente> findByUsernameAndPassword(String username, String password);
+    void registerUser(Utente utente);
 
 }

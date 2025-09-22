@@ -1,6 +1,7 @@
 package com.financial.Financial.service;
 
 import com.financial.Financial.model.Prodotto;
+import com.financial.Financial.model.dto.PreventivoDto;
 
 import java.util.List;
 

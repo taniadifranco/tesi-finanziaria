@@ -1,5 +1,6 @@
 package com.financial.Financial.controller;
 
+
 import com.financial.Financial.model.Prodotto;
 import com.financial.Financial.service.ProdottoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,4 +46,7 @@ public class ProdottoController {
     public void deleteProdotto(@PathVariable Long id) {
         prodottoService.deleteById(id);
     }
+
+
+
 }

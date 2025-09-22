@@ -1,6 +1,7 @@
 package com.financial.Financial.controller;
 
 import com.financial.Financial.model.LoginRequest;
+import com.financial.Financial.model.LoginResponse;
 import com.financial.Financial.model.Utente;
 import com.financial.Financial.service.UtenteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,19 +37,46 @@ public class UtenteController {
     public Utente createUtente(@RequestBody Utente utente) {
         return utenteService.save(utente);
     }
-
-    @PostMapping("/login")
-    @Operation(summary = "Ricerca un utente esistente", description = "Effettua l'accesso ai dati di un utente esistente attraverso username e password")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginData) {
-        Optional<Utente> utente = utenteService.findByUsernameAndPassword(
-                loginData.getUsername(), loginData.getPassword()
-        );
-        if (utente.isPresent()) {
-            return ResponseEntity.ok(utente.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenziali non valide");
+    @PostMapping("/register")
+    @Operation(summary = "Registra un nuovo utente", description = "Registra un utente standard con ruolo USER")
+    public ResponseEntity<?> register(@RequestBody Utente utente) {
+        try {
+            utenteService.registerUser(utente);
+            return ResponseEntity.ok("Registrazione completata con successo");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore interno");
         }
     }
+
+
+
+    @PostMapping("/login")
+    @Operation(summary = "Ricerca un utente esistente", description = "Effettua l'accesso ai dati di un " +
+            "utente esistente attraverso username e password")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginData) {
+        Optional<Utente> utenteOpt = utenteService.findByUsernameAndPassword(
+                loginData.getUsername(),
+                loginData.getPassword()
+        );
+
+        if (utenteOpt.isPresent()) {
+            Utente u = utenteOpt.get();
+            LoginResponse dto = new LoginResponse(
+                    u.getNome(),
+                    u.getCognome(),
+                    u.getId(),
+                    u.getUsername(),
+                    u.getCliente() != null ? u.getCliente().getCodiceFiscale() : null,
+                    u.getRuolo() != null ? u.getRuolo().getNome() : null
+            );
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
 
     @PutMapping("/{id}")
     @Operation(summary = "Aggiorna un utente esistente", description = "Modifica i dati di un utente esistente dato il suo ID")

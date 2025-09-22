@@ -1,5 +1,6 @@
 package com.financial.Financial.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class Utente {
 
     private String nome;
     private String cognome;
+    @Column(unique = true)
     private String email;
     private String username;
     private String password;
@@ -28,5 +30,6 @@ public class Utente {
 
 
     @OneToOne(mappedBy = "utente", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Cliente cliente;
 }
